@@ -1,5 +1,6 @@
 import boto3
 import json, logging
+import csv
 
 """
 aws ec2 describe-instances --query "Reservations[].Instances[].{amiID:ImageId,InstanceCreationDate:LaunchTime,Name:Tags[?Key=='Name']|[0].Value,InstaceId,Status:State.Name} --filter Name=instance-state-name, Values=running --output table
@@ -7,6 +8,13 @@ aws ec2 describe-instances --query "Reservations[].Instances[].{amiID:ImageId,In
 aws ec2 describe-images --image-ids <I'd goes here from previous command> --query "Images[*].{AWSAccount:OwnerId,DateofCreation:CreationDate,amiName:Name}" --output table
 
 """
+def CSV_Writer(content, header):
+  with open('export.csv', 'w') as csvFile:
+    writer = csv.DictWriter(csvFile, fieldnames=header)
+    writer.writeheader()
+    for row in content:
+      writer.writerow(row)
+
 def main():
   print(f'main function ...>1')
   ec2 = boto3.client('ec2')
@@ -45,7 +53,13 @@ def main():
           print(f'Err {str(e)}')
       instance_data.append(instance_dict)
 
-  print(f'Result: {instance_data}')
+  #print(f'Result: {instance_data}')
+  # df = pd.DataFrame(instance_data)
+  # print(df)
+  header = ['InstanceId', 'amiID', 'InstanceCreationDate', 'Status', 'InstanceName', 'Image_CreationDate', 'Image_Name', 'OwnerId']
+  CSV_Writer(content=instance_data,header=header)
+
+
 
 if __name__=="__main__":
   main()
