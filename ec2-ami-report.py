@@ -18,11 +18,17 @@ def main():
   for reservations in response["Reservations"]:
     for item in reservations["Instances"]:
       AMI_image_list = []
-      # print(f'intanceID: {item["InstanceId"]},  AMI-ID: {item["ImageId"]}, InstanceCreationDate: {item["LaunchTime"]}, Tags: {item["Tags"]}')
+      # print(f'InstanceID: {item["InstanceId"]},  AMI-ID: {item["ImageId"]}, InstanceCreationDate: {item["LaunchTime"]}, Tags: {item["Tags"]}')
       instance_dict['InstanceId'] = item["InstanceId"]
       instance_dict['ImageId'] = item["ImageId"]
       instance_dict['InstanceCreationDate'] = item["LaunchTime"]
-      instance_dict['Tags'] = item["Tags"]
+      for tag in item["Tags"]:
+        print(f'tag: {tag} key = {tag.get("Key")} val={tag.get("Value")}')
+        if tag.get('Key') == "Name":
+            instance_name = tag.get('Value')
+          # else:
+          #     instance_name = None
+      instance_dict['InstanceName'] = instance_name
       AMI_image_list.append(item["ImageId"])
       response_image = ec2.describe_images(ImageIds=AMI_image_list)
       for image in response_image['Images']:
