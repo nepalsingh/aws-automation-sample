@@ -31,6 +31,7 @@ def main():
     Instances = []
     instance_dict = {}
     AMI_image_list = []
+    instance_name = ""
     format_date = "%m-%d-%y %H:%M:%S.%f"
 
     # print(f'response {response["Reservations"][0]["Instances"]}')
