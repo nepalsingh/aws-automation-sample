@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 """
-aws ec2 describe-instances --query "Reservations[].Instances[].{amiID:ImageId,InstanceCreationDate:LaunchTime,Name:Tags[?Key=='Name']|[0].Value,InstaceId,Status:State.Name} --filter Name=instance-state-name, Values=running --output table
+aws ec2 describe-instances --query "Reservations[].Instances[].{amiID:ImageId,InstanceCreationDate:LaunchTime,Name:Tags[?Key=='Name']|[0].Value,InstaceId,Status:State.Name}" --filter Name=instance-state-name, Values=running --output table
 
 aws ec2 describe-images --image-ids <I'd goes here from previous command> --query "Images[*].{AWSAccount:OwnerId,DateofCreation:CreationDate,amiName:Name}" --output table
 
@@ -74,7 +74,7 @@ def main():
           a = json.loads(ami)
           if a['amiID'] == v['amiID']:
             v.update(a)
-          final_data.append(v)
+        final_data.append(v)
 
     print(f'Output is Stored in : {output_csv}, instance Count: {len(Instances)}, Image Count {len(ami_images)} ')
     print(f'{"End":-^60}')
